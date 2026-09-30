@@ -64,3 +64,11 @@ def put_device(name: str, device: Device, response: Response):
         response.status_code = 201
         response.headers["Location"] = f"/devices/{name}"
     return data
+
+
+@app.delete("/devices/{name}", status_code=204)
+def delete_device(name: str):
+    result = devices.delete_one({"name": name})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Device not found")
+    return Response(status_code=204)
